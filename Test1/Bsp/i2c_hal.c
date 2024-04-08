@@ -1,17 +1,16 @@
 /*
-  ³ÌÐòËµÃ÷: CT117E-M4Ç¶ÈëÊ½¾ºÈü°åGPIOÄ£ÄâI2C×ÜÏßÇý¶¯³ÌÐò
-  Èí¼þ»·¾³: MDK-ARM HAL¿â
-  Ó²¼þ»·¾³: CT117E-M4Ç¶ÈëÊ½¾ºÈü°å
-  ÈÕ    ÆÚ: 2020-3-1
+  ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: CT117E-M4Ç¶ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GPIOÄ£ï¿½ï¿½I2Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: MDK-ARM HALï¿½ï¿½
+  Ó²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: CT117E-M4Ç¶ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  ï¿½ï¿½    ï¿½ï¿½: 2020-3-1
 */
 
 #include "i2c_hal.h"
-#include "main.h"
 
 #define DELAY_TIME	20
 
 /**
-  * @brief SDAÏßÊäÈëÄ£Ê½ÅäÖÃ
+  * @brief SDAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½
   * @param None
   * @retval None
   */
@@ -27,7 +26,7 @@ void SDA_Input_Mode()
 }
 
 /**
-  * @brief SDAÏßÊä³öÄ£Ê½ÅäÖÃ
+  * @brief SDAï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½
   * @param None
   * @retval None
   */
@@ -43,8 +42,8 @@ void SDA_Output_Mode()
 }
 
 /**
-  * @brief SDAÏßÊä³öÒ»¸öÎ»
-  * @param val Êä³öµÄÊý¾Ý
+  * @brief SDAï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Î»
+  * @param val ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   * @retval None
   */
 void SDA_Output( uint16_t val )
@@ -60,8 +59,8 @@ void SDA_Output( uint16_t val )
 }
 
 /**
-  * @brief SCLÏßÊä³öÒ»¸öÎ»
-  * @param val Êä³öµÄÊý¾Ý
+  * @brief SCLï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Î»
+  * @param val ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   * @retval None
   */
 void SCL_Output( uint16_t val )
@@ -77,9 +76,9 @@ void SCL_Output( uint16_t val )
 }
 
 /**
-  * @brief SDAÊäÈëÒ»Î»
+  * @brief SDAï¿½ï¿½ï¿½ï¿½Ò»Î»
   * @param None
-  * @retval GPIO¶ÁÈëÒ»Î»
+  * @retval GPIOï¿½ï¿½ï¿½ï¿½Ò»Î»
   */
 uint8_t SDA_Input(void)
 {
@@ -92,7 +91,7 @@ uint8_t SDA_Input(void)
 
 
 /**
-  * @brief I2CµÄ¶ÌÔÝÑÓÊ±
+  * @brief I2Cï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
   * @param None
   * @retval None
   */
@@ -103,7 +102,7 @@ static void delay1(unsigned int n)
 }
 
 /**
-  * @brief I2CÆðÊ¼ÐÅºÅ
+  * @brief I2Cï¿½ï¿½Ê¼ï¿½Åºï¿½
   * @param None
   * @retval None
   */
@@ -120,7 +119,7 @@ void I2CStart(void)
 }
 
 /**
-  * @brief I2C½áÊøÐÅºÅ
+  * @brief I2Cï¿½ï¿½ï¿½ï¿½ï¿½Åºï¿½
   * @param None
   * @retval None
   */
@@ -138,7 +137,7 @@ void I2CStop(void)
 }
 
 /**
-  * @brief I2CµÈ´ýÈ·ÈÏÐÅºÅ
+  * @brief I2Cï¿½È´ï¿½È·ï¿½ï¿½ï¿½Åºï¿½
   * @param None
   * @retval None
   */
@@ -160,14 +159,14 @@ unsigned char I2CWaitAck(void)
             return ERROR;
         }
     }
-    SDA_Output_Mode();
     SCL_Output(0);
+    SDA_Output_Mode();
     delay1(DELAY_TIME);
     return SUCCESS;
 }
 
 /**
-  * @brief I2C·¢ËÍÈ·ÈÏÐÅºÅ
+  * @brief I2Cï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Åºï¿½
   * @param None
   * @retval None
   */
@@ -184,7 +183,7 @@ void I2CSendAck(void)
 }
 
 /**
-  * @brief I2C·¢ËÍ·ÇÈ·ÈÏÐÅºÅ
+  * @brief I2Cï¿½ï¿½ï¿½Í·ï¿½È·ï¿½ï¿½ï¿½Åºï¿½
   * @param None
   * @retval None
   */
@@ -201,8 +200,8 @@ void I2CSendNotAck(void)
 }
 
 /**
-  * @brief I2C·¢ËÍÒ»¸ö×Ö½Ú
-  * @param cSendByte ÐèÒª·¢ËÍµÄ×Ö½Ú
+  * @brief I2Cï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö½ï¿½
+  * @param cSendByte ï¿½ï¿½Òªï¿½ï¿½ï¿½Íµï¿½ï¿½Ö½ï¿½
   * @retval None
   */
 void I2CSendByte(unsigned char cSendByte)
@@ -224,9 +223,9 @@ void I2CSendByte(unsigned char cSendByte)
 }
 
 /**
-  * @brief I2C½ÓÊÕÒ»¸ö×Ö½Ú
+  * @brief I2Cï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö½ï¿½
   * @param None
-  * @retval ½ÓÊÕµ½µÄ×Ö½Ú
+  * @retval ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½Ö½ï¿½
   */
 unsigned char I2CReceiveByte(void)
 {
@@ -263,34 +262,34 @@ void I2CInit(void)
 
 uchar eeprom_read(uchar addr)
 {
-	uchar dat;
-	I2CStart();
-	I2CSendByte(0xa0);
-	I2CWaitAck();
-	I2CSendByte(addr);
-	I2CWaitAck();
-	I2CStop();
-	
-	I2CStart();
-	I2CSendByte(0xa1);
-	I2CWaitAck();
-	dat=I2CReceiveByte();
-	I2CSendNotAck();
-	I2CStop();
-	return dat;
+    uchar dat;
+    I2CStart();
+    I2CSendByte(0xa0);
+    I2CWaitAck();
+    I2CSendByte(addr);
+    I2CWaitAck();
+    I2CStop();
+    
+    I2CStart();
+    I2CSendByte(0xa1);
+    I2CWaitAck();
+    dat=I2CReceiveByte();
+    I2CWaitAck();
+    I2CStop();
+    return dat;
 }
 
-void eeprom_write(uchar addr, uchar dat)
+void eeprom_write(uchar addr,uchar dat)
 {
-	I2CStart();
-	I2CSendByte(0xa0);
-	I2CWaitAck();
-	I2CSendByte(addr);
-	I2CWaitAck();
-	
-	I2CSendByte(dat);
-	I2CWaitAck();
-	I2CStop();
+
+    I2CStart();
+    I2CSendByte(0xa0);
+    I2CWaitAck();
+    I2CSendByte(addr);
+    I2CWaitAck();
+    I2CSendByte(dat);
+    I2CWaitAck();
+    I2CStop();
+
+
 }
-
-

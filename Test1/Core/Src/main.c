@@ -106,9 +106,13 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
-  
+	
 	LED_dis(0X00);
 	LCD_Init();
+	
+	I2CInit();										//I2C初始化
+	eeprom_write(1,0x00);
+	
 	
 	LCD_Clear(Black);
     LCD_SetBackColor(Black);
@@ -118,7 +122,6 @@ int main(void)
 	
 	HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim17,TIM_CHANNEL_1);		//PWM开启通道
-	I2CInit();
 
 
 
@@ -136,10 +139,10 @@ int main(void)
 	if(eep_flag==1)
 	{
 //		eep_w();
-		eeprom_write(1,0x09);
+		eeprom_write(1,111);
 		HAL_Delay(500);
 		eep_flag=0;
-		if (eeprom_read(1) == 15) {
+		if (eeprom_read(1) == 111) {
 			LED_dis(0x01);
 		}
 		eep_temp=eeprom_read(1);
