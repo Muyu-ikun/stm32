@@ -28,6 +28,7 @@
 #include "interrupt.h"
 #include "led.h"
 #include "badc.h"
+#include "i2c_hal.h"
 
 /* USER CODE END Includes */
 
@@ -36,8 +37,10 @@
 
 extern struct keys key[4];
 uint16_t view=0;
-uint16_t pa6_duty=10;
+uint pa6_duty=10;
 uint16_t pa7_duty=10;
+unsigned char eep_temp=0;
+bool eep_flag;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -66,6 +69,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void key_proc(void);
 void disp_proc(void);
+void eep_w(void);
 /* USER CODE END 0 */
 
 /**
@@ -114,44 +118,9 @@ int main(void)
 	
 	HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim17,TIM_CHANNEL_1);		//PWM¿ªÆôÍ¨µÀ
+	I2CInit();
 
 
-//    LCD_DrawLine(120, 0, 320, Horizontal);
-//    LCD_DrawLine(0, 160, 240, Vertical);
-//    HAL_Delay(1000);
-//    LCD_Clear(Blue);
-
-//    LCD_DrawRect(70, 210, 100, 100);
-//    HAL_Delay(1000);
-//    LCD_Clear(Blue);
-
-//    LCD_DrawCircle(120, 160, 50);
-//    HAL_Delay(1000);
-
-//    LCD_Clear(Blue);
-//    LCD_DisplayStringLine(Line4, (unsigned char *)"    Hello,world.   ");
-//    HAL_Delay(1000);
-
-//    LCD_SetBackColor(White);
-//    LCD_DisplayStringLine(Line0, (unsigned char *)"                    ");
-//    LCD_SetBackColor(Black);
-//    LCD_DisplayStringLine(Line1, (unsigned char *)"                    ");
-//    LCD_SetBackColor(Grey);
-//    LCD_DisplayStringLine(Line2, (unsigned char *)"      LCD Test      ");
-//    LCD_SetBackColor(Blue);
-//    LCD_DisplayStringLine(Line3, (unsigned char *)"                    ");
-//    LCD_SetBackColor(Blue2);
-//    LCD_DisplayStringLine(Line4, (unsigned char *)"                    ");
-//    LCD_SetBackColor(Red);
-//    LCD_DisplayStringLine(Line5, (unsigned char *)"                    ");
-//    LCD_SetBackColor(Magenta);
-//    LCD_DisplayStringLine(Line6, (unsigned char *)"      HAL LIB       ");
-//    LCD_SetBackColor(Green);
-//    LCD_DisplayStringLine(Line7, (unsigned char *)"                    ");
-//    LCD_SetBackColor(Cyan);
-//    LCD_DisplayStringLine(Line8, (unsigned char *)"         TX         ");
-//    LCD_SetBackColor(Yellow);
-//    LCD_DisplayStringLine(Line9, (unsigned char *)"                    ");
 
 	
   /* USER CODE END 2 */
@@ -160,42 +129,22 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	LED_dis(0x88);
-//    HAL_Delay(500);
-//	LED_dis(0x00);
-//	HAL_Delay(500);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	char text[30];
-//	uint16_t i=6;
-//	sprintf(text,"     NBRF:%d",i);
-//	LCD_DisplayStringLine(Line7, (unsigned char *)text);
-
-//	if(key[0].single_flag==1)
-//	{
-//		sprintf(text,"     KEY0");
-//		LCD_DisplayStringLine(Line1, (unsigned char *)text);	
-//		key[0].single_flag=0;
-//	}
-//	if(key[1].single_flag==1)
-//	{
-//		sprintf(text,"     KEY1");
-//		LCD_DisplayStringLine(Line2, (unsigned char *)text);	
-//		key[1].single_flag=0;
-//	}
-//	if(key[2].long_flag==1)
-//	{
-//		sprintf(text,"     KEY2long");
-//		LCD_DisplayStringLine(Line3, (unsigned char *)text);	
-//		key[2].long_flag=0;
-//	}
-//	if(key[3].long_flag==1)
-//	{
-//		sprintf(text,"     KEY3long");
-//		LCD_DisplayStringLine(Line4, (unsigned char *)text);	
-//		key[3].long_flag=0;
-//	}
+	if(eep_flag==1)
+	{
+//		eep_w();
+		eeprom_write(1,0x09);
+		HAL_Delay(500);
+		eep_flag=0;
+		if (eeprom_read(1) == 15) {
+			LED_dis(0x01);
+		}
+		eep_temp=eeprom_read(1);
+	}
+//	(eeprom_read(1)<<8)+
 	key_proc();
 	disp_proc();
 
@@ -271,6 +220,12 @@ void key_proc()
 		__HAL_TIM_SetCompare(&htim17,TIM_CHANNEL_1,pa7_duty);
 		key[2].single_flag=0;
 	}
+	if(key[3].single_flag==1)
+	{
+		LCD_Clear(Black);
+		eep_flag=1;
+		key[3].single_flag=0;
+	}
 }   
 void disp_proc()
 {
@@ -292,7 +247,21 @@ void disp_proc()
 		LCD_DisplayStringLine(Line2, (unsigned char *)text);
 		sprintf(text,"    PA7:%d",pa7_duty);
 		LCD_DisplayStringLine(Line4, (unsigned char *)text);
+		
+		sprintf(text,"    eep_pa6:%d",eep_temp);
+		LCD_DisplayStringLine(Line6, (unsigned char *)text);
+
 	}
+	
+}
+void eep_w()
+{
+	uchar pa6_h=pa6_duty>>8;
+	uchar pa6_l=pa6_duty&0xff;
+	eeprom_write(1,pa6_h);
+	HAL_Delay(10);
+	eeprom_write(2,pa6_l);
+	HAL_Delay(10);
 	
 }
 /* USER CODE END 4 */

@@ -1,4 +1,4 @@
-test1/main.o: ../Core/Src/main.c ../Core/Inc\main.h \
+test1/i2c_hal.o: ../Bsp/i2c_hal.c ../Bsp/i2c_hal.h \
   ../Drivers/STM32G4xx_HAL_Driver/Inc\stm32g4xx_hal.h \
   ../Core/Inc\stm32g4xx_hal_conf.h \
   ../Drivers/STM32G4xx_HAL_Driver/Inc\stm32g4xx_hal_rcc.h \
@@ -33,8 +33,5 @@ test1/main.o: ../Core/Src/main.c ../Core/Inc\main.h \
   ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
   ../Drivers/STM32G4xx_HAL_Driver/Inc\stm32g4xx_hal_tim.h \
   ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
-  ../Bsp\led.h ../Core/Inc\gpio.h ../Core/Inc/main.h ../Bsp\lcd.h \
-  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h ../Core/Inc\adc.h \
-  ../Core/Inc\tim.h ../Bsp\interrupt.h \
-  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h ../Bsp\badc.h \
-  ../Bsp\i2c_hal.h
+  ../Core/Inc\main.h ../Bsp\led.h ../Core/Inc\gpio.h ../Core/Inc/main.h \
+  ../Bsp\lcd.h D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h

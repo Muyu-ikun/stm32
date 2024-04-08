@@ -29,6 +29,7 @@
 "test1\bsp_lcd.o"
 "test1\interrupt.o"
 "test1\badc.o"
+"test1\i2c_hal.o"
 --strict --scatter "Test1\Test1.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
