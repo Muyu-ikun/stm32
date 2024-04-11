@@ -36,11 +36,10 @@
 /* USER CODE BEGIN PTD */
 
 extern struct keys key[4];
+extern uint frq1,frq2;
 uint16_t view=0;
 uint pa6_duty=10;
 uint16_t pa7_duty=10;
-unsigned char eep_temp=0;
-bool eep_flag;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -105,52 +104,41 @@ int main(void)
   MX_TIM17_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
+  MX_TIM2_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-	
-	LED_dis(0X00);
 	LCD_Init();
 	
 	I2CInit();										//I2C初始化
-	eeprom_write(1,0x00);
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  	LED_dis(0X00);
 	
 	
 	LCD_Clear(Black);
     LCD_SetBackColor(Black);
     LCD_SetTextColor(White);
 	
-	HAL_TIM_Base_Start_IT(&htim3);
+	HAL_TIM_Base_Start_IT(&htim4);
+	
 	
 	HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim17,TIM_CHANNEL_1);		//PWM开启通道
-
-
-
 	
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	HAL_TIM_IC_Start_IT(&htim2,TIM_CHANNEL_1);
+	HAL_TIM_IC_Start_IT(&htim3,TIM_CHANNEL_1);		//频率测量捕获定时器开启
   while (1)
   {
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	if(eep_flag==1)
-	{
-//		eep_w();
-		eeprom_write(1,111);
-		HAL_Delay(500);
-		eep_flag=0;
-		if (eeprom_read(1) == 111) {
-			LED_dis(0x01);
-		}
-		eep_temp=eeprom_read(1);
-	}
-//	(eeprom_read(1)<<8)+
+	
 	key_proc();
 	disp_proc();
-
+	
   }
   /* USER CODE END 3 */
 }
@@ -225,35 +213,62 @@ void key_proc()
 	}
 	if(key[3].single_flag==1)
 	{
-		LCD_Clear(Black);
-		eep_flag=1;
+	  uchar frq_h=frq2>>8;
+      uchar frq_l=frq2&0xff;
+      eeprom_write(1,frq_h);
+      HAL_Delay(10);
+      eeprom_write(2,frq_l);
+      HAL_Delay(10);
+
+      LCD_ClearLine(Line8);
 		key[3].single_flag=0;
 	}
+	if(key[2].long_flag==1)
+	{
+		LED_dis(0x80);
+		key[2].long_flag=0;
+	}
+	if(key[3].long_flag==1)
+	{
+		LED_dis(0x00);
+		key[3].long_flag=0;
+	}
 }   
+
+uint32_t disp_tick=0;
+
 void disp_proc()
 {
 	char text[30];
+	if(uwTick -  disp_tick < 50)return ;
+	disp_tick = uwTick;
+	uint eep_temp;
 	if(view==0)
 	{	
-		sprintf(text,"       Data");
-		LCD_DisplayStringLine(Line1, (unsigned char *)text);
-		sprintf(text,"       V1:%.2f",getADC(&hadc1));
-		LCD_DisplayStringLine(Line3, (unsigned char *)text);
-		sprintf(text,"       V2:%.2f",getADC(&hadc2));
-		LCD_DisplayStringLine(Line4, (unsigned char *)text);
+		sprintf(text,"       Data         ");								//参数显示界面（默认界面）
+		LCD_DisplayStringLine(Line1, (uint8_t *)text);
+		sprintf(text,"       V1:%.2f      ",getADC(&hadc1));
+		LCD_DisplayStringLine(Line3, (uint8_t *)text);
+		sprintf(text,"       V2:%.2f      ",getADC(&hadc2));
+		LCD_DisplayStringLine(Line4, (uint8_t *)text);
+		sprintf(text,"       frq1:%d      ",frq1);
+		LCD_DisplayStringLine(Line5, (uint8_t *)text);
+		sprintf(text,"       frq2:%d      ",frq2);
+		LCD_DisplayStringLine(Line6, (uint8_t *)text);
+		
+		eep_temp=(eeprom_read(1)<<8)+eeprom_read(2);
+		sprintf(text,"       frq2_eep:%d  ",eep_temp);
+		LCD_DisplayStringLine(Line8, (uint8_t *)text);
 	}
 	else if(view==1)
 	{
-		sprintf(text,"       Para");
-		LCD_DisplayStringLine(Line0, (unsigned char *)text);
-		sprintf(text,"    PA6:%d",pa6_duty);
-		LCD_DisplayStringLine(Line2, (unsigned char *)text);
-		sprintf(text,"    PA7:%d",pa7_duty);
-		LCD_DisplayStringLine(Line4, (unsigned char *)text);
+		sprintf(text,"       Para         ");								//数率显示界面
+		LCD_DisplayStringLine(Line0, (uint8_t *)text);
+		sprintf(text,"    PA6:%d          ",pa6_duty);
+		LCD_DisplayStringLine(Line2, (uint8_t *)text);
+		sprintf(text,"    PA7:%d          ",pa7_duty);
+		LCD_DisplayStringLine(Line3, (uint8_t *)text);
 		
-		sprintf(text,"    eep_pa6:%d",eep_temp);
-		LCD_DisplayStringLine(Line6, (unsigned char *)text);
-
 	}
 	
 }

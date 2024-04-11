@@ -781,6 +781,11 @@
               <FileType>5</FileType>
               <FilePath>..\Bsp\badc.h</FilePath>
             </File>
+            <File>
+              <FileName>i2c_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\i2c_hal.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -29,6 +29,7 @@
 #include "interrupt.h"
 #include "stdio.h"
 #include "badc.h"
+#include "i2c_hal.h"
 
 /* USER CODE END Includes */
 
@@ -59,11 +60,14 @@ double Vmin=1.0;
 double Vmax_temp=3.0;
 double Vmin_temp=1.0;
 
+uchar eep_test=0;
+
 uint time_start_flag=1;
 uint time_stop_flag=1;
 
 bool led1_flag=0;
 bool led2_flag=0;
+bool eep_flag=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -116,23 +120,41 @@ int main(void)
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 
-	LED_Dsp(0x00);                //led初始化
+
 	LCD_Init();				//LCD初始化
-	
+	I2CInit();				//I2C初始化
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  
+  	LED_Dsp(0x00);                //led初始化
+		
 	LCD_Clear(Black);		
     LCD_SetBackColor(Black);
     LCD_SetTextColor(White);
 
 	HAL_TIM_Base_Start_IT(&htim4);			//打开tim4
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if(eep_flag==1)
+	  {
+		eeprom_write(1,111);
+		  HAL_Delay(10);
+		  eep_flag=0;
+	  }
+	  eep_test=eeprom_read(1);
+	  if(eeprom_read(1)==111)
+	  {
+		  LED_Dsp(0x01);
+	  }
+	  else LED_Dsp(0x00);
+	  
 	  lcd_proc();
 	  key_proc();
 	  led_proc();
@@ -213,6 +235,12 @@ void key_proc(void)
 		}
 		key[2].singel_flag=0;
 	}
+	if(key[3].singel_flag==1)
+	{
+		eep_flag=1;
+		key[3].singel_flag=0;
+		LCD_ClearLine(Line6);
+	}
 
 }
 
@@ -292,6 +320,8 @@ void lcd_proc(void)
 	LCD_DisplayStringLine(Line4, (unsigned char *)text);
 		sprintf(text," vmin:%.1lf",Vmin);
 	LCD_DisplayStringLine(Line5, (unsigned char *)text);
+		sprintf(text," eep_test:%d",eep_test);
+	LCD_DisplayStringLine(Line6, (unsigned char *)text);
 	}
 	else if(view==1)										//参数界面
 	{

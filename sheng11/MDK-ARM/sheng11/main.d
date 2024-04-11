@@ -42,3 +42,4 @@ sheng11\main.o: ../Bsp/interrupt.h
 sheng11\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 sheng11\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 sheng11\main.o: ../Bsp/badc.h
+sheng11\main.o: ../Bsp/i2c_hal.h

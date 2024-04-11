@@ -29,6 +29,7 @@
 "sheng11\interrupt.o"
 "sheng11\led.o"
 "sheng11\badc.o"
+"sheng11\i2c_hal.o"
 --strict --scatter "sheng11\sheng11.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

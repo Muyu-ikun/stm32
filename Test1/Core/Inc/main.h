@@ -65,7 +65,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 #define uchar unsigned char
-#define uint unsigned short int
+#define uint unsigned int
 
 /* USER CODE END Private defines */
 
