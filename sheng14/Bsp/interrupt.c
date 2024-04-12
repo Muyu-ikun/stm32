@@ -54,7 +54,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					else
 					{
 						key[i].key_time++;
-					
 					}
 				}
 				break;

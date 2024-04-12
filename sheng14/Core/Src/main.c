@@ -63,6 +63,7 @@ uint PARA_K=1;
 uint PARA_R=1;
 bool R_K_choice=0;
 uint R_temp=1,K_temp=1;
+uint32_t fre=99;
 double pa1_duty=10.0;
 /* USER CODE END PV */
 
@@ -208,6 +209,7 @@ void key_proc()								//°´¼ü¿ØÖÆº¯Êý
 		{
 			mode=!mode;
 			N_change++;
+			__HAL_TIM_SET_AUTORELOAD(&htim2,fre);
 		}
 		
 		key[1].single_flag=0;

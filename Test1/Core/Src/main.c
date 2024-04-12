@@ -46,6 +46,7 @@ extern bool led7_flag;
 uint16_t view=0;
 uint pa6_duty=10;
 uint16_t pa7_duty=10;
+uint16_t fre=99;
 char usart[5]={0,0,0,0,0};
 /* USER CODE END PTD */
 
@@ -222,6 +223,7 @@ void key_proc()
 		pa6_duty+=10;
 		if(pa6_duty>=100)pa6_duty=10;
 		__HAL_TIM_SetCompare(&htim16,TIM_CHANNEL_1,pa6_duty);
+		__HAL_TIM_SET_AUTORELOAD(&htim17,fre);
 		key[1].single_flag=0;
 	}
 	if(key[2].single_flag==1)
