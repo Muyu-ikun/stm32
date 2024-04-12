@@ -33,6 +33,8 @@ test1\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h
 test1\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
 test1\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 test1\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
+test1\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h
+test1\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
 test1\main.o: ../Bsp/led.h
 test1\main.o: ../Core/Inc/main.h
 test1\main.o: ../Core/Inc/gpio.h
@@ -40,7 +42,9 @@ test1\main.o: ../Bsp/lcd.h
 test1\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 test1\main.o: ../Core/Inc/adc.h
 test1\main.o: ../Core/Inc/tim.h
+test1\main.o: ../Core/Inc/usart.h
 test1\main.o: ../Bsp/interrupt.h
 test1\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 test1\main.o: ../Bsp/badc.h
 test1\main.o: ../Bsp/i2c_hal.h
+test1\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

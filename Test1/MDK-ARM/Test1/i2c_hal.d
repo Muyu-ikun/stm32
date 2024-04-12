@@ -33,6 +33,8 @@ test1\i2c_hal.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h
 test1\i2c_hal.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
 test1\i2c_hal.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 test1\i2c_hal.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
+test1\i2c_hal.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h
+test1\i2c_hal.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
 test1\i2c_hal.o: ../Core/Inc/main.h
 test1\i2c_hal.o: ../Bsp/led.h
 test1\i2c_hal.o: ../Core/Inc/main.h

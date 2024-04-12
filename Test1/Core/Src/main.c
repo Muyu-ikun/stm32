@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -29,6 +30,7 @@
 #include "led.h"
 #include "badc.h"
 #include "i2c_hal.h"
+#include "string.h"
 
 /* USER CODE END Includes */
 
@@ -37,9 +39,14 @@
 
 extern struct keys key[4];
 extern uint frq1,frq2;
+extern char rx_data[30];
+extern uint8_t rx_dat;
+extern uchar rx_pointer;
+extern bool led7_flag;
 uint16_t view=0;
 uint pa6_duty=10;
 uint16_t pa7_duty=10;
+char usart[5]={0,0,0,0,0};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -69,6 +76,9 @@ void SystemClock_Config(void);
 void key_proc(void);
 void disp_proc(void);
 void eep_w(void);
+void led_proc(void);
+void uart_rx_proc(void);
+void uart_transmit(void);
 /* USER CODE END 0 */
 
 /**
@@ -106,6 +116,7 @@ int main(void)
   MX_ADC2_Init();
   MX_TIM2_Init();
   MX_TIM4_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 	LCD_Init();
 	
@@ -114,12 +125,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  	LED_dis(0X00);
+  	LED_dis(0XFF);
 	
 	
 	LCD_Clear(Black);
     LCD_SetBackColor(Black);
     LCD_SetTextColor(White);
+	
+	HAL_UART_Receive_IT(&huart1,&rx_dat,1);   //UART1初始化
 	
 	HAL_TIM_Base_Start_IT(&htim4);
 	
@@ -138,6 +151,13 @@ int main(void)
 	
 	key_proc();
 	disp_proc();
+	led_proc();
+	if(rx_pointer!=0)
+	{
+		int temp=rx_pointer;
+		HAL_Delay(1);
+		if(temp==rx_pointer)uart_rx_proc();
+	}
 	
   }
   /* USER CODE END 3 */
@@ -205,10 +225,11 @@ void key_proc()
 		key[1].single_flag=0;
 	}
 	if(key[2].single_flag==1)
-	{
+	{	
 		pa7_duty+=10;
 		if(pa7_duty>=100)pa7_duty=10;
 		__HAL_TIM_SetCompare(&htim17,TIM_CHANNEL_1,pa7_duty);
+		uart_transmit();
 		key[2].single_flag=0;
 	}
 	if(key[3].single_flag==1)
@@ -221,16 +242,17 @@ void key_proc()
       HAL_Delay(10);
 
       LCD_ClearLine(Line8);
+	  LED_tog(0x80);
 		key[3].single_flag=0;
 	}
 	if(key[2].long_flag==1)
 	{
-		LED_dis(0x80);
+		LED_on(0x10);
 		key[2].long_flag=0;
 	}
 	if(key[3].long_flag==1)
 	{
-		LED_dis(0x00);
+		LED_off(0x10);
 		key[3].long_flag=0;
 	}
 }   
@@ -269,6 +291,8 @@ void disp_proc()
 		sprintf(text,"    PA7:%d          ",pa7_duty);
 		LCD_DisplayStringLine(Line3, (uint8_t *)text);
 		
+		LCD_DisplayStringLine(Line5, (uint8_t *)usart);
+		
 	}
 	
 }
@@ -282,6 +306,44 @@ void eep_w()
 	HAL_Delay(10);
 	
 }
+void led_proc()
+{
+	if(view==0)
+	{
+		LED_on(0x01);
+	}
+	if(led7_flag==1)
+	{
+		LED_tog(0x40);
+		led7_flag=0;
+	}		
+}
+
+void uart_rx_proc(void)
+{
+	if(rx_pointer>0)
+	{
+		if(rx_pointer==5)
+		{
+			sscanf(rx_data,"%5s",usart);
+			if(strcmp(usart,"fivee")==0)
+			{
+				LED_tog(0x10);
+				memset(&usart,0,sizeof(usart));
+			}
+		}
+		rx_pointer=0;
+		memset(rx_data,0,30);
+	}
+}
+
+void uart_transmit()
+{
+	char temp[20];							//串口发送错误
+	sprintf(temp,"Error\r\n");
+	HAL_UART_Transmit(&huart1,(uint8_t*)temp,strlen(temp),50);
+}
+	
 /* USER CODE END 4 */
 
 /**
